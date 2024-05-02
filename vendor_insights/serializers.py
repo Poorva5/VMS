@@ -19,10 +19,13 @@ class VendorSerializer(serializers.ModelSerializer):
 
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
+    vendor = VendorSerializer(read_only=True)
+
     class Meta:
         model = PurchaseOrder
         fields = [
-            "id" "po_number",
+            "id",
+            "po_number",
             "vendor",
             "order_date",
             "delivery_date",
@@ -36,6 +39,8 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
 
 
 class HistoricalPerformanceSerializer(serializers.ModelSerializer):
+    vendor = VendorSerializer()
+
     class Meta:
         model = HistoricalPerformance
         fields = [
