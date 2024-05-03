@@ -16,19 +16,36 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class VendorView(viewsets.ModelViewSet):
+    """
+    Viewset to perform CRUD operation on Vendor objects
+    """
+
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
     permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def performance(self, request, pk=None):
-        vendor = self.get_object()
-        performance_data = HistoricalPerformance.objects.filter(vendor=vendor)
-        serializer = HistoricalPerformanceSerializer(performance_data, many=True)
-        return Response(serializer.data)
+        """
+        Retrieves Performace metrics for specific Vendor
+        """
+        try:
+            vendor = self.get_object()
+            performance_data = HistoricalPerformance.objects.filter(vendor=vendor)
+            serializer = HistoricalPerformanceSerializer(performance_data, many=True)
+            return Response(serializer.data)
+        except HistoricalPerformance.DoesNotExist:
+            return Response(
+                {"message": "No performance metric present for this vendor"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 class PurchaseOrderView(viewsets.ModelViewSet):
+    """
+    viewset to perform CRUD operation on Purchase order objects.
+    """
+
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
     filter_backends = [filters.DjangoFilterBackend]
@@ -36,6 +53,9 @@ class PurchaseOrderView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates new purchase order
+        """
         try:
             data = request.data
             serializer = self.get_serializer(data=data)
@@ -60,6 +80,9 @@ class PurchaseOrderView(viewsets.ModelViewSet):
             )
 
     def update(self, request, *args, **kwargs):
+        """
+        Updates purchase order based on provided data
+        """
         try:
             instance = self.get_object()
             data = request.data
@@ -85,6 +108,9 @@ class PurchaseOrderView(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def acknowledge(self, request, pk=None):
+        """
+        function to Acknowledge a purchase order
+        """
         purchase_order = self.get_object()
         purchase_order.acknowledgment_date = timezone.now()
         purchase_order.save()

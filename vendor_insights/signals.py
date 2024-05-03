@@ -9,6 +9,8 @@ def update_performance_metrics(sender, instance, created, **kwargs):
         vendor = instance.vendor
         completed_orders = vendor.purchase_orders.filter(status="Completed")
 
+        
+        # calculate avg of on time delivery rate
         on_time_orders = completed_orders.filter(
             delivery_date__lte=instance.delivery_date
         )
@@ -16,6 +18,7 @@ def update_performance_metrics(sender, instance, created, **kwargs):
             on_time_orders.count() / completed_orders.count()
         ) * 100
 
+        # calculate avg of quality rating
         quality_ratings = completed_orders.exclude(quality_rating__isnull=True)
         total_quality_rating = sum(
             quality_ratings.values_list("quality_rating", flat=True)
@@ -27,6 +30,8 @@ def update_performance_metrics(sender, instance, created, **kwargs):
         else:
             quality_rating_avg = 0
 
+        
+        # calculate avg of avg response time of po
         ack_orders = completed_orders.exclude(acknowledgment_date__isnull=True)
         total_ack_time = sum(
             (order.acknowledgment_date - order.issue_date).total_seconds()
@@ -35,9 +40,12 @@ def update_performance_metrics(sender, instance, created, **kwargs):
         average_response_time = (
             total_ack_time / ack_orders.count() if ack_orders.count() > 0 else 0
         )
-
+        
         average_response_time_hrs = average_response_time / 3600
+        avg_response_time = round(average_response_time_hours, 2)
 
+        
+        # calculate fulfilment rate of completed orders
         fulfilled_orders = completed_orders.exclude(status="Completed with issues")
         fulfillment_rate = (
             fulfilled_orders.count() / vendor.purchase_orders.count()
@@ -49,7 +57,7 @@ def update_performance_metrics(sender, instance, created, **kwargs):
             defaults={
                 "on_time_delivery_rate": on_time_delivery_rate,
                 "quality_rating_avg": quality_rating_avg,
-                "average_response_time": average_response_time_hrs,
+                "average_response_time": avg_response_time,
                 "fulfillment_rate": fulfillment_rate,
             },
         )
