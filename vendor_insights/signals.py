@@ -42,7 +42,7 @@ def update_performance_metrics(sender, instance, created, **kwargs):
         )
         
         average_response_time_hrs = average_response_time / 3600
-        avg_response_time = round(average_response_time_hours, 2)
+        avg_response_time = round(average_response_time_hrs, 2)
 
         
         # calculate fulfilment rate of completed orders
