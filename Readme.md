@@ -2,11 +2,9 @@
 
 ## Prerequisites
 
-    python
-
-    django
-
-    django_rest__framework
+    - Python
+    - Django
+    - Django Rest Framework
 
 ## Installation
 
@@ -23,5 +21,13 @@
     cd vms
 
     pip install -r requirements.txt
+
+## Running Tests
+
+    Run the test command:
+
+    ```bash
+    python manage.py test vendor_insights.tests.test_vms_views
+    ```
 
 
