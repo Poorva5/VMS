@@ -8,7 +8,7 @@ router = routers.DefaultRouter()
 router.register(r"vendors", VendorView, basename="vendor")
 
 po_router = routers.DefaultRouter()
-po_router.register(r"", PurchaseOrderView, basename="purchase_order_api")
+po_router.register(r"", PurchaseOrderView, basename="po")
 
 urlpatterns = [
     path("", include(router.urls)),

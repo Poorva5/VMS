@@ -57,24 +57,6 @@ class PurchaseOrder(BaseModel):
 
     def __str__(self):
         return f"{self.vendor.name} - {self.po_number}"
-    
-    def update_average_response_time(self):
-        ack_orders = PurchaseOrder.objects.filter(
-            vendor=self.vendor,
-            acknowledgment_date__isnull=False
-        )
-        
-        #calculate avg of ack date
-        avg_ack_date = ack_orders.aggregate(
-            Avg('acknowledgment_date')
-        )['acknowledgment_date__avg']
-        
-        self.vendor.average_response_time = avg_ack_date
-        self.vendor.save()
-        
-        
-        
-
 
 class HistoricalPerformance(BaseModel):
     vendor = models.ForeignKey(
