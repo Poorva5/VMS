@@ -8,7 +8,7 @@
 
 ## Installation
 
-1. Clone the repository:
+Clone the repository:
 
     git clone git@github.com:Poorva5/VMS.git
 
@@ -24,8 +24,8 @@
 
 ## Running Tests
 
-    Run the test command:
+Run the test command:
 
-    `python manage.py test vendor_insights.tests.test_vms_views`
+    python manage.py test vendor_insights.tests.test_vms_views
 
 
