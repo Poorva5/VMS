@@ -11,11 +11,14 @@ from rest_framework.response import Response
 from .filters import PurchaseOrderFilter
 from django_filters import rest_framework as filters
 from rest_framework.decorators import action
+from django.utils import timezone
+from rest_framework.permissions import IsAuthenticated
 
 
 class VendorView(viewsets.ModelViewSet):
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def performance(self, request, pk=None):
@@ -30,6 +33,7 @@ class PurchaseOrderView(viewsets.ModelViewSet):
     serializer_class = PurchaseOrderSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = PurchaseOrderFilter
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         try:
@@ -78,3 +82,13 @@ class PurchaseOrderView(viewsets.ModelViewSet):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @action(detail=True, methods=["post"])
+    def acknowledge(self, request, pk=None):
+        purchase_order = self.get_object()
+        purchase_order.acknowledgment_date = timezone.now()
+        purchase_order.save()
+        return Response(
+            {"message": "Purchase order acknowledged successfully"},
+            status=status.HTTP_200_OK,
+        )
