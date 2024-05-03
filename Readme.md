@@ -26,8 +26,6 @@
 
     Run the test command:
 
-    ```
-    python manage.py test vendor_insights.tests.test_vms_views
-    ```
+    `python manage.py test vendor_insights.tests.test_vms_views`
 
 
