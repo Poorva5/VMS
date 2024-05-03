@@ -2,9 +2,11 @@
 
 ## Prerequisites
 
-python
-django
-django_rest__framework
+    python
+
+    django
+
+    django_rest__framework
 
 ## Installation
 
@@ -22,4 +24,4 @@ django_rest__framework
 
     pip install -r requirements.txt
 
-    
+
