@@ -26,7 +26,7 @@
 
     Run the test command:
 
-    ```bash
+    ```
     python manage.py test vendor_insights.tests.test_vms_views
     ```
 
